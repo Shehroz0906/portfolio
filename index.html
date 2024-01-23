@@ -317,30 +317,31 @@
 			  </div>
 			  <!-- Contact Form -->
 			  <div class="col-md-6 contact">
-		      <form role="form">
+		      <form role="form" name="submit-to-google-sheet">
             <div class="row">
                 <div class="col-md-6">
           <!-- Name -->
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Your name">
+                        <input type="text" name="Name" class="form-control" placeholder="Your name">
                     </div>
                 </div>
                 <div class="col-md-6">
           <!-- Email -->
                     <div class="form-group">
-                        <input type="email" class="form-control" placeholder="Email address">
+                        <input type="email" name="Email" class="form-control" placeholder="Email address">
                     </div>
                 </div>
             </div>
 		      <!-- Message Area -->
             <div class="form-group">
-                <textarea class="form-control" placeholder="Write your message here..." style="height:232px;"></textarea>
+                <textarea name="Message" class="form-control" placeholder="Write your message here..." style="height:232px;"></textarea>
             </div>
 		      <!-- Subtmit Button -->
             <button type="submit" class="btn btn-send">
                 Send message
             </button>
           </form>
+          <span id="msg"></span>
 			  </div>
 			</div>
 			<br>
@@ -443,6 +444,23 @@
       speed: 2000 // How many milliseconds until the next word show.
     });
     </script>
-	
+    <script>
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbwezP8RVhMt3DaLFPOts8hKH_Z_-u5rteXRE1EGHk3ZgPUK-LBktVF2aj30-kfw9p_4QA/exec'
+      const form = document.forms['submit-to-google-sheet']
+      const msg = document.getElementById("msg")
+
+      form.addEventListener('submit', e => {
+        e.preventDefault()
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+          .then(response => {
+            msg.innerHTML = "Message sent succesfully"
+            setTimeout(function(){
+              msg.innerHTML = ""
+            },3000)
+            form.reset()
+          })
+          .catch(error => console.error('Error!', error.message))
+      })
+    </script>
     </body>
 </html>
